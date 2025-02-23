@@ -1,4 +1,5 @@
 from rest_framework import serializers
+import re
 from .models import Author
 
 
@@ -8,8 +9,8 @@ class AuthorSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'email', 'bio']
 
     def validate_name(self, value):
-        if len(value) < 2:
-            raise serializers.ValidationError("Name must be at least 2 characters long.")
+        if re.search(r'\d', value):
+            raise serializers.ValidationError("Name cannot contain numbers.")
         return value
 
     def validate_email(self, value):
