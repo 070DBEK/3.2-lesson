@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from .models import Post
 from categories.serializers import CategorySerializer
+from authors.serializers import AuthorSerializer
+from tags.serializers import TagSerializer
+from comments.serializers import CommentSerializer
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -8,10 +11,11 @@ class PostSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     tags = TagSerializer(many=True, read_only=True)
     comment_count = serializers.SerializerMethodField()
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'content', 'author', 'category', 'tags', 'slug', 'created_at', 'updated_at', 'status', 'comment_count']
+        fields = ['id', 'title', 'content', 'author', 'category', 'tags', 'slug', 'created_at', 'updated_at', 'status', 'comment_count', 'comments']
 
     def validate_title(self, value):
         if len(value) < 5:
