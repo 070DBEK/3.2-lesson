@@ -3,9 +3,6 @@ from .views import PostListCreateAPIView, PostDetailAPIView
 from comments.views import PostCommentListCreateAPIView
 
 
-app_name = 'posts'
-
-
 urlpatterns = [
     path('', PostListCreateAPIView.as_view(), name='post-list-create'),
     path('<int:pk>/', PostDetailAPIView.as_view(), name='post-detail'),

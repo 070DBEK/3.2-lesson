@@ -6,8 +6,6 @@ from authors.models import Author
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="comments")
-    author_name = models.CharField(max_length=50)
-    author_email = models.EmailField()
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     parent_comment = models.ForeignKey(
@@ -15,7 +13,7 @@ class Comment(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        author, created = Author.objects.get_or_create(email=self.author_email, defaults={"name": self.author_name})
+        author, created = Author.objects.get_or_create(email=self.author.email, defaults={"name": self.author.name})
         self.author = author
         super().save(*args, **kwargs)
 

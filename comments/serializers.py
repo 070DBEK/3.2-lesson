@@ -1,16 +1,25 @@
 from rest_framework import serializers
 from .models import Comment
+from authors.models import Author
 
 
-class RecursiveCommentSerializer(serializers.Serializer):
-    def to_representation(self, instance):
-        serializer = self.parent.parent.__class__(instance, context=self.context)
-        return serializer.data
+class RecursiveCommentSerializer(serializers.ModelSerializer):
+    replies = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'author', 'content', 'created_at', 'replies']
+
+    def get_replies(self, obj):
+        return RecursiveCommentSerializer(obj.replies.all(), many=True).data
+
 
 
 class CommentSerializer(serializers.ModelSerializer):
     replies = RecursiveCommentSerializer(many=True, read_only=True)
-    author_email = serializers.EmailField()
+    author_name = serializers.CharField(write_only=True)
+    author_email = serializers.EmailField(write_only=True)
+    author = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Comment
@@ -31,3 +40,12 @@ class CommentSerializer(serializers.ModelSerializer):
         if not value.endswith("@gmail.com"):
             raise serializers.ValidationError("Only Gmail addresses are allowed.")
         return value
+
+    def create(self, validated_data):
+        author_name = validated_data.pop('author_name')
+        author_email = validated_data.pop('author_email')
+
+        author, created = Author.objects.get_or_create(email=author_email, defaults={'name': author_name})
+        validated_data['author'] = author
+
+        return super().create(validated_data)

@@ -2,12 +2,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Tag
-from posts.models import Post
 from .serializers import TagSerializer
 from posts.serializers import PostSerializer
 
 
 class TagListCreateAPIView(APIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+
     def get(self, request):
         tags = Tag.objects.all()
         serializer = TagSerializer(tags, many=True)
@@ -22,6 +24,9 @@ class TagListCreateAPIView(APIView):
 
 
 class TagDetailAPIView(APIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+
     def get_object(self, pk):
         try:
             return Tag.objects.get(pk=pk)

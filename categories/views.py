@@ -9,6 +9,9 @@ from .models import Category
 
 
 class CategoryAPIView(APIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
     def get(self, request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
@@ -23,6 +26,9 @@ class CategoryAPIView(APIView):
 
 
 class CategoryDetailAPIView(APIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
     def get_object(self, pk):
         try:
             return Category.objects.get(pk=pk)

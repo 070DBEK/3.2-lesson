@@ -2,11 +2,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
+
+from tags.serializers import TagSerializer
 from .models import Comment
 from .serializers import CommentSerializer
 
 
 class CommentListCreateAPIView(APIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
     def get(self, request):
         comments = Comment.objects.filter(parent_comment=None)
         serializer = CommentSerializer(comments, many=True)
@@ -21,6 +26,9 @@ class CommentListCreateAPIView(APIView):
 
 
 class CommentDetailAPIView(APIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
     def get_object(self, pk):
         try:
             return Comment.objects.get(pk=pk)
@@ -47,6 +55,8 @@ class CommentDetailAPIView(APIView):
 
 
 class NestedCommentAPIView(APIView):
+    queryset = Comment.objects.all()
+
     def get(self, request, comment_id):
         try:
             parent_comment = Comment.objects.get(id=comment_id)

@@ -8,6 +8,9 @@ from .serializers import PostSerializer
 
 
 class PostListCreateAPIView(APIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
     def get(self, request):
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True)
@@ -22,6 +25,9 @@ class PostListCreateAPIView(APIView):
 
 
 class PostDetailAPIView(APIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
     def get_object(self, pk):
         try:
             return Post.objects.get(pk=pk)
