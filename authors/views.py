@@ -7,9 +7,6 @@ from .serializers import AuthorSerializer
 
 
 class AuthorListCreateAPIView(APIView):
-    queryset = Author.objects.all()
-    serializer_class = AuthorSerializer
-
     def get(self, request):
         authors = Author.objects.all()
         serializer = AuthorSerializer(authors, many=True)
@@ -24,9 +21,6 @@ class AuthorListCreateAPIView(APIView):
 
 
 class AuthorDetailAPIView(APIView):
-    queryset = Author.objects.all()
-    serializer_class = AuthorSerializer
-
     def get_object(self, pk):
         try:
             return Author.objects.get(pk=pk)

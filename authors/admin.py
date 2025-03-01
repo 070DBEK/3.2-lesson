@@ -4,7 +4,7 @@ from .models import Author
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ("name", "email", "bio", 'user')
+    list_display = ("name", "email", "bio")
     search_fields = ("name", "email")
-    list_filter = ("email", 'user')
+    list_filter = ("email", )
     ordering = ("name",)
